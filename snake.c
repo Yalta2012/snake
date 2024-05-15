@@ -3,9 +3,10 @@
 #include <windows.h>
 #include <conio.h>
 #include <time.h>
+#include <curses.h>
 
 #define SCREEN_X_SIZE 10
-#define SCREEN_Y_SIZE 20
+#define SCREEN_Y_SIZE 15
 enum direction
 {
     STOP,
@@ -34,13 +35,13 @@ void print_frame(int head_pos_x, int head_pos_y, int x_size, int y_size, int fie
         for (j = 0; j < x_size; j++)
         {
             if (head_pos_x == j && head_pos_y == i)
-                printf(" \e[1;32m@\e[0m ");
+                printf(" \x1B[1;32m@\e[0m ");
             else if (field[i][j] > 0)
-                printf(" \e[1;32mo\e[0m ");
+                printf(" \x1B[1;32mo\e[0m ");
             else if (!field[i][j])
                 printf(" . ");
             else if (field[i][j] == -1)
-                printf(" \e[1;31mA\e[0m ");
+                printf(" \x1B[1;31mA\e[0m ");
         }
         printf("|");
         printf("\n");
@@ -95,13 +96,15 @@ int change_frame(int direction, int *head_pos_x, int *head_pos_y, int x_size, in
     if (field[new_y][new_x] == -1)
     {
         (*score)++;
-        field[*head_pos_y][*head_pos_x]=(*score);
+        field[*head_pos_y][*head_pos_x] = (*score);
         spawn_apple(x_size, y_size, field);
     }
-    else if (field[new_y][new_x]>0){
+    else if (field[new_y][new_x] > 0)
+    {
         return 0;
     }
-    else{
+    else
+    {
         for (i = 0; i < y_size; i++)
         {
             for (j = 0; j < x_size; j++)
@@ -119,7 +122,8 @@ int change_frame(int direction, int *head_pos_x, int *head_pos_y, int x_size, in
     return 1;
 }
 
-int game(){
+int game()
+{
     int head_position_x = 5;
     int head_postion_y = 10;
 
@@ -138,19 +142,6 @@ int game(){
     while (1)
     {
 
-            if (kbhit())
-            {
-                input = _getch();
-                if (input == 'h' && direction != RIGHT && direction != LEFT)
-                    direction = LEFT;
-                if (input == 'u' && direction != DOWN && direction != UP)
-                    direction = UP;
-                if (input == 'j' && direction != UP && direction != DOWN)
-                    direction = DOWN;
-                if (input == 'k' && direction != LEFT && direction != RIGHT)
-                    direction = RIGHT;
-            }
-
         // printf("%d",key_direction(input));
         system("cls");
         printf("\tSCORE: %d\n", score);
@@ -158,13 +149,70 @@ int game(){
         // printf("%d\n",rand_int(0,10));
         // printf("%d %d\n", head_position_x, head_postion_y);
         //  printf("%c %d\n",input,direction);
-        if(!change_frame(direction, &head_position_x, &head_postion_y, scr_x, scr_y, field, &score)) return score;
+        if (kbhit())
+        {
+            input = _getch();
+            if (input == 'h' && direction != RIGHT && direction != LEFT)
+                direction = LEFT;
+            if (input == 'u' && direction != DOWN && direction != UP)
+                direction = UP;
+            if (input == 'j' && direction != UP && direction != DOWN)
+                direction = DOWN;
+            if (input == 'k' && direction != LEFT && direction != RIGHT)
+                direction = RIGHT;
+        }
+
+        if (!change_frame(direction, &head_position_x, &head_postion_y, scr_x, scr_y, field, &score))
+            return score;
         Sleep(150);
     }
 }
+
 int main()
 {
-    int score = game();
-    printf("\nGAME OVER\n");
-    printf("\nYOUR SCORE: %d\n",score);
+    int score;
+    int key;
+    while (1)
+    {
+        system("cls");
+
+        printf("\x1b[1;30;47m\tSNAKE\x1b[0m\n\n");
+        printf("\tMenu\n"
+               "\t1.Start game\n"
+               "\t2.Control\n"
+               "\t0.Exit\n"
+               "\t>> ");
+        scanf("%d", &key);
+        fflush(stdin);
+
+        switch (key)
+        {
+        case 1:
+            score = game();
+            system("cls");
+
+            printf("\x1b[1;30;47m\tGAME OVER\x1b[0m\n\n");
+            printf("\n\tYOUR SCORE: %d\n", score);
+            Sleep(2);
+            _getch();
+            break;
+        case 2:
+            system("cls");
+            printf("\x1b[1;30;47m\tCONTROL\x1b[0m\n\n"
+                   "\tLEFT - h\n"
+                   "\tUP - u\n"
+                   "\tRIGHT - k\n"
+                   "\tDOWN - j\n"
+                   "\n\tback - any key\n"
+                   "\t>> ");
+            _getch();
+            break;
+        case 0:
+            return 0;
+        default:
+            printf("Unknown command\n");
+            break;
+        }
+    }
+    return 0;
 }
