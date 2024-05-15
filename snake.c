@@ -193,17 +193,17 @@ int main()
 
             printf("\x1b[1;30;47m\tGAME OVER\x1b[0m\n\n");
             printf("\n\tYOUR SCORE: %d\n", score);
-            Sleep(2);
+            Sleep(2000);
             _getch();
             break;
         case 2:
             system("cls");
-            printf("\x1b[1;30;47m\tCONTROL\x1b[0m\n\n"
-                   "\tLEFT - h\n"
-                   "\tUP - u\n"
-                   "\tRIGHT - k\n"
-                   "\tDOWN - j\n"
-                   "\n\tback - any key\n"
+           printf("\x1b[1;30;47m\tCONTROL\x1b[0m\n\n"
+                   "\t  UP - [u]\n"
+                   "    LEFT - [h] [j] [k] - RIGHT \n"
+                   "\t\t|\n"
+                   "\t       DOWN  \n"
+                   "\tback - any key\n"
                    "\t>> ");
             _getch();
             break;
