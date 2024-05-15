@@ -3,10 +3,9 @@
 #include <windows.h>
 #include <conio.h>
 #include <time.h>
-#include <curses.h>
 
 #define SCREEN_X_SIZE 10
-#define SCREEN_Y_SIZE 15
+#define SCREEN_Y_SIZE 10
 enum direction
 {
     STOP,
@@ -124,11 +123,12 @@ int change_frame(int direction, int *head_pos_x, int *head_pos_y, int x_size, in
 
 int game()
 {
-    int head_position_x = 5;
-    int head_postion_y = 10;
 
-    int scr_y = SCREEN_Y_SIZE;
     int scr_x = SCREEN_X_SIZE;
+    int scr_y = SCREEN_Y_SIZE;
+
+    int head_position_x = scr_x/2;
+    int head_postion_y = scr_y/2;
 
     int field[SCREEN_Y_SIZE][SCREEN_X_SIZE] = {0};
 
