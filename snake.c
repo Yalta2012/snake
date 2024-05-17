@@ -98,7 +98,7 @@ int change_frame(int direction, int *head_pos_x, int *head_pos_y, int x_size, in
         field[*head_pos_y][*head_pos_x] = (*score);
         spawn_apple(x_size, y_size, field);
     }
-    else if (field[new_y][new_x] > 0)
+    else if (field[new_y][new_x] > 1)
     {
         return 0;
     }
@@ -123,6 +123,7 @@ int change_frame(int direction, int *head_pos_x, int *head_pos_y, int x_size, in
 
 int game()
 {
+	clock_t start_time;
 
     int scr_x = SCREEN_X_SIZE;
     int scr_y = SCREEN_Y_SIZE;
@@ -141,30 +142,33 @@ int game()
     spawn_apple(scr_x, scr_y, field);
     while (1)
     {
-
+		start_time=clock();
+		
         // printf("%d",key_direction(input));
         system("cls");
-        printf("\tSCORE: %d\n", score);
+		printf("\tSCORE: %d\n", score);
         print_frame(head_position_x, head_postion_y, scr_x, scr_y, field);
-        // printf("%d\n",rand_int(0,10));
-        // printf("%d %d\n", head_position_x, head_postion_y);
-        //  printf("%c %d\n",input,direction);
-        if (kbhit())
-        {
-            input = _getch();
-            if (input == 'h' && direction != RIGHT && direction != LEFT)
-                direction = LEFT;
-            if (input == 'u' && direction != DOWN && direction != UP)
-                direction = UP;
-            if (input == 'j' && direction != UP && direction != DOWN)
-                direction = DOWN;
-            if (input == 'k' && direction != LEFT && direction != RIGHT)
-                direction = RIGHT;
-        }
 
+		while(((double)(clock()-start_time))/CLOCKS_PER_SEC<0.15){
+		
+	        if (kbhit())
+	        {
+	            input = _getch();
+	            
+        	}
+        	
+		}
+			if (input == 'h' && direction != RIGHT && direction != LEFT)
+	                direction = LEFT;
+	            if (input == 'u' && direction != DOWN && direction != UP)
+	                direction = UP;
+	            if (input == 'j' && direction != UP && direction != DOWN)
+	                direction = DOWN;
+	            if (input == 'k' && direction != LEFT && direction != RIGHT)
+	                direction = RIGHT;
         if (!change_frame(direction, &head_position_x, &head_postion_y, scr_x, scr_y, field, &score))
             return score;
-        Sleep(150);
+        //Sleep(150);
     }
 }
 
@@ -172,6 +176,7 @@ int main()
 {
     int score;
     int key;
+    clock_t start_time;
     while (1)
     {
         system("cls");
@@ -193,7 +198,9 @@ int main()
 
             printf("\x1b[1;30;47m\tGAME OVER\x1b[0m\n\n");
             printf("\n\tYOUR SCORE: %d\n", score);
-            Sleep(2000);
+            //Sleep(2000);
+            start_time=clock();
+            while(((double)(clock()-start_time))/CLOCKS_PER_SEC<2){		}
             _getch();
             break;
         case 2:
